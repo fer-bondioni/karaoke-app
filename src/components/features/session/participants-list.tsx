@@ -7,9 +7,12 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { createClient } from '@/lib/supabase/client'
 import { User } from '@/types/database'
 import { useUserStore } from '@/stores/user-store'
+import { InviteParticipantDialog } from './invite-participant-dialog'
 
 interface ParticipantsListProps {
   sessionId: string
+  sessionCode: string
+  sessionName: string
 }
 
 export function ParticipantsList({ sessionId }: ParticipantsListProps) {
@@ -115,7 +118,13 @@ export function ParticipantsList({ sessionId }: ParticipantsListProps) {
       <CardHeader>
         <div className="flex items-center justify-between">
           <CardTitle className="text-lg">Participants</CardTitle>
-          <Badge variant="secondary">{participants.length}</Badge>
+          <div className="flex items-center gap-2">
+            <Badge variant="secondary">{participants.length}</Badge>
+            <InviteParticipantDialog 
+              sessionCode={sessionCode}
+              sessionName={sessionName}
+            />
+          </div>
         </div>
       </CardHeader>
       <CardContent>

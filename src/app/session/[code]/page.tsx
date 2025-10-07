@@ -154,7 +154,11 @@ export default function SessionPage() {
           {/* Participants & Queue */}
           <div className="space-y-6">
             {/* Participants */}
-            <ParticipantsList sessionId={session.id} />
+            <ParticipantsList 
+              sessionId={session.id}
+              sessionCode={session.code}
+              sessionName={session.name}
+            />
 
             {/* Queue */}
             <QueueDisplay
