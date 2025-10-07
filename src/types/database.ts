@@ -21,6 +21,7 @@ export type SessionParticipant = {
   session_id: string
   user_id: string
   joined_at: string
+  invited_by: string | null
 }
 
 export type Song = {
@@ -80,4 +81,49 @@ export type SessionWithDetails = Session & {
   host: User
   participants: SessionParticipant[]
   queue: QueueItemWithDetails[]
+}
+
+// Phase 5 Types
+
+export type SessionInvitation = {
+  id: string
+  session_id: string
+  invited_by: string
+  invitation_code: string
+  uses_remaining: number | null
+  expires_at: string | null
+  created_at: string
+}
+
+export type Challenge = {
+  id: string
+  session_id: string
+  challenger_id: string
+  challenged_id: string
+  song_id: string
+  queue_item_id: string | null
+  status: 'pending' | 'accepted' | 'declined' | 'completed'
+  message: string | null
+  created_at: string
+  responded_at: string | null
+  completed_at: string | null
+}
+
+export type ChallengeWithDetails = Challenge & {
+  challenger: User
+  challenged: User
+  song: Song
+  queue_item?: QueueItem | null
+}
+
+export type SkipVote = {
+  id: string
+  queue_item_id: string
+  user_id: string
+  session_id: string
+  created_at: string
+}
+
+export type SkipVoteWithUser = SkipVote & {
+  user: User
 }
