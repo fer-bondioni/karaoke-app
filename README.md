@@ -87,6 +87,67 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000) in your browser.
 
+## 🚀 Deploying to Production
+
+This app is optimized for deployment on Vercel. Follow these steps:
+
+### Deploy from GitHub (Recommended)
+
+1. **Push your code to GitHub**:
+   ```bash
+   git add .
+   git commit -m "Ready for deployment"
+   git push origin main
+   ```
+
+2. **Connect to Vercel**:
+   - Go to [vercel.com/new](https://vercel.com/new)
+   - Sign in with GitHub
+   - Click "Import Project"
+   - Select your karaoke app repository
+   - Vercel will auto-detect Next.js settings
+
+3. **Configure Environment Variables**:
+   In the Vercel project settings, add these environment variables:
+   
+   **Required Variables:**
+   - `NEXT_PUBLIC_SUPABASE_URL` - Your Supabase project URL
+   - `NEXT_PUBLIC_SUPABASE_ANON_KEY` - Your Supabase anon key
+   - `SUPABASE_SERVICE_ROLE_KEY` - Your Supabase service role key
+   - `NEXT_PUBLIC_YOUTUBE_API_KEY` - Your YouTube Data API key
+   - `NEXT_PUBLIC_APP_URL` - Your production URL (e.g., `https://your-app.vercel.app`)
+
+4. **Deploy**:
+   - Click "Deploy"
+   - Wait for the build to complete (2-3 minutes)
+   - Your app will be live!
+
+5. **Post-Deployment Setup**:
+   - Copy your Vercel production URL
+   - Update `NEXT_PUBLIC_APP_URL` environment variable in Vercel with your actual URL
+   - Go to Supabase → Authentication → URL Configuration
+   - Add your Vercel URL to "Site URL" and "Redirect URLs"
+   - Redeploy if needed
+
+### Continuous Deployment
+
+Once connected, Vercel will automatically:
+- ✅ Deploy every push to `main` branch
+- ✅ Create preview deployments for pull requests
+- ✅ Run build checks before deployment
+
+### Deployment Checklist
+
+Before deploying, ensure:
+- [ ] All environment variables are set in Vercel
+- [ ] Supabase database schema is applied
+- [ ] YouTube API key has proper quotas
+- [ ] `.env.local` is NOT committed to Git
+- [ ] Build succeeds locally: `npm run build`
+- [ ] No TypeScript errors: `npm run lint`
+
+For detailed deployment instructions, see [DEPLOYMENT.md](./DEPLOYMENT.md).
+
 ## 📁 Project Structure
 
 ```
