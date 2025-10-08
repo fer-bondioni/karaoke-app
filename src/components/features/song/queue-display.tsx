@@ -8,6 +8,9 @@ import { ScrollArea } from '@/components/ui/scroll-area'
 import { createClient } from '@/lib/supabase/client'
 import { toast } from '@/hooks/use-toast'
 import { Play, Trash2, Music2 } from 'lucide-react'
+import { ReactionPicker } from '@/components/features/reactions/reaction-picker'
+import { SkipVoting } from './skip-voting'
+import { useUserStore } from '@/stores/user-store'
 
 interface QueueItemWithDetails {
   id: string
@@ -36,6 +39,7 @@ interface QueueDisplayProps {
 export function QueueDisplay({ sessionId, onPlaySong }: QueueDisplayProps) {
   const [queue, setQueue] = useState<QueueItemWithDetails[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const user = useUserStore((state) => state.user)
 
   useEffect(() => {
     const supabase = createClient()
@@ -231,11 +235,31 @@ export function QueueDisplay({ sessionId, onPlaySong }: QueueDisplayProps) {
                     </div>
                   </div>
 
-                  {item.status === 'playing' && (
-                    <Badge variant="default" className="mt-2 text-xs">
-                      Now Playing
-                    </Badge>
-                  )}
+                  {/* Additional features */}
+                  <div className="mt-2 flex items-center gap-2 flex-wrap">
+                    {item.status === 'playing' && (
+                      <Badge variant="default" className="text-xs">
+                        Now Playing
+                      </Badge>
+                    )}
+                    
+                    {/* Reactions */}
+                    {user && (
+                      <ReactionPicker
+                        queueItemId={item.id}
+                        userId={user.id}
+                      />
+                    )}
+                    
+                    {/* Skip Voting for playing song */}
+                    {item.status === 'playing' && user && (
+                      <SkipVoting
+                        queueItemId={item.id}
+                        sessionId={sessionId}
+                        userId={user.id}
+                      />
+                    )}
+                  </div>
                 </div>
               ))}
             </div>
