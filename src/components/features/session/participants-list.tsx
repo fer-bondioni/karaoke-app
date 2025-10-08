@@ -8,6 +8,7 @@ import { createClient } from '@/lib/supabase/client'
 import { User } from '@/types/database'
 import { useUserStore } from '@/stores/user-store'
 import { InviteParticipantDialog } from './invite-participant-dialog'
+import { ChallengeButton } from '../challenge/challenge-button'
 
 interface ParticipantsListProps {
   sessionId: string
@@ -153,11 +154,19 @@ export function ParticipantsList({ sessionId, sessionCode, sessionName }: Partic
                 <span className="text-sm font-medium flex-1">
                   {participant.display_name}
                 </span>
-                {currentUser?.id === participant.id && (
-                  <Badge variant="outline" className="text-xs">
-                    You
-                  </Badge>
-                )}
+                <div className="flex items-center gap-2">
+                  {currentUser?.id === participant.id ? (
+                    <Badge variant="outline" className="text-xs">
+                      You
+                    </Badge>
+                  ) : currentUser ? (
+                    <ChallengeButton
+                      participant={participant}
+                      sessionId={sessionId}
+                      currentUserId={currentUser.id}
+                    />
+                  ) : null}
+                </div>
               </div>
             ))}
           </div>
