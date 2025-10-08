@@ -15,7 +15,7 @@ interface ParticipantsListProps {
   sessionName: string
 }
 
-export function ParticipantsList({ sessionId }: ParticipantsListProps) {
+export function ParticipantsList({ sessionId, sessionCode, sessionName }: ParticipantsListProps) {
   const [participants, setParticipants] = useState<User[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const currentUser = useUserStore((state) => state.user)
@@ -25,23 +25,37 @@ export function ParticipantsList({ sessionId }: ParticipantsListProps) {
 
     // Fetch initial participants
     const fetchParticipants = async () => {
-      const { data, error } = await supabase
+      const { data: participantsData, error: participantsError } = await supabase
         .from('session_participants')
-        .select('user_id, users(*)') 
+        .select('user_id') 
         .eq('session_id', sessionId)
 
-      if (error) {
-        console.error('Error fetching participants:', error)
+      if (participantsError) {
+        console.error('Error fetching participants:', participantsError)
         setIsLoading(false)
         return
       }
 
-      // Extract users from the joined data
-      const users = data
-        .map((p: any) => p.users)
-        .filter(Boolean) as User[]
+      if (!participantsData || participantsData.length === 0) {
+        setParticipants([])
+        setIsLoading(false)
+        return
+      }
 
-      setParticipants(users)
+      // Fetch user details for all participants
+      const userIds = participantsData.map((p: any) => p.user_id)
+      const { data: usersData, error: usersError } = await supabase
+        .from('users')
+        .select('*')
+        .in('id', userIds)
+
+      if (usersError) {
+        console.error('Error fetching users:', usersError)
+        setIsLoading(false)
+        return
+      }
+
+      setParticipants(usersData || [])
       setIsLoading(false)
     }
 
